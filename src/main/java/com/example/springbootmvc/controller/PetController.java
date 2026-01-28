@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/api/v1")
 public class PetController {
-    private PetService petService;
+    private final PetService petService;
 
     public PetController(PetService petService) {
         this.petService = petService;

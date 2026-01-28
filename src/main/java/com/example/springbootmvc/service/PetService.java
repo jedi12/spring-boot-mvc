@@ -1,10 +1,10 @@
 package com.example.springbootmvc.service;
 
+import com.example.springbootmvc.exceptions.EntityNotFound;
+import com.example.springbootmvc.exceptions.PetNotFoundException;
 import com.example.springbootmvc.model.Pet;
 import com.example.springbootmvc.model.User;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 public class PetService {
@@ -18,7 +18,7 @@ public class PetService {
     public Pet createPet(Pet pet) {
         User user = repoService.getUsers().get(pet.getUserId());
         if (user == null) {
-            throw new IllegalArgumentException("Создание Питомца невозможно, так указанный для питомца Пользователь с userId=%s не существует".formatted(pet.getUserId()));
+            throw new PetNotFoundException("Создание Питомца невозможно, так указанный для питомца Пользователь с userId=%s не существует".formatted(pet.getUserId()));
         }
 
         pet.setId(newPetId++);
@@ -67,7 +67,7 @@ public class PetService {
     public Pet getPet(Long petId) {
         Pet pet = findPet(petId);
         if (pet == null) {
-            throw new NoSuchElementException("Питомец с id=%s не найден".formatted(petId));
+            throw new EntityNotFound("Питомец с id=%s не найден".formatted(petId));
         }
 
         return pet;

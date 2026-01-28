@@ -51,7 +51,7 @@ class PetControllerTest {
         String petJson = mapper.writeValueAsString(petDto);
 
         String createdUserJson = mockMvc.perform(
-                        post("/rest/pet").contentType(MediaType.APPLICATION_JSON).content(petJson))
+                        post("/api/v1/pet").contentType(MediaType.APPLICATION_JSON).content(petJson))
                 .andExpect(status().is(201))
                 .andReturn()
                 .getResponse()
@@ -73,7 +73,7 @@ class PetControllerTest {
         pet = petService.createPet(pet);
 
         mockMvc.perform(
-                delete("/rest/pet/{petId}", pet.getId()))
+                delete("/api/v1/pet/{petId}", pet.getId()))
                 .andExpect(status().is(204));
     }
 }

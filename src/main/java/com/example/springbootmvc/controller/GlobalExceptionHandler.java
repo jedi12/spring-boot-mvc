@@ -1,6 +1,7 @@
 package com.example.springbootmvc.controller;
 
 import com.example.springbootmvc.dto.ErrorMessageResponse;
+import com.example.springbootmvc.exceptions.EntityNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -22,17 +22,17 @@ public class GlobalExceptionHandler {
         String detail = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        log.error("REST: Ошибка валидации: {}", detail);
+        log.warn("REST: Ошибка валидации: {}", detail);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponse("Ошибка валидации", detail, LocalDateTime.now()));
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(NoSuchElementException e) {
+    @ExceptionHandler(EntityNotFound.class)
+    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(EntityNotFound e) {
         String detail = e.getMessage();
-        log.error("REST: Ошибка на сервере: {}", detail);
+        log.warn("REST: Ошибка на сервере: {}", detail);
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorMessageResponse> handleException(Exception e) {
         String detail = e.getMessage();
-        log.error("REST: Ошибка на сервере: {}", detail);
+        log.error("REST: Ошибка на сервере: {}", detail, e);
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

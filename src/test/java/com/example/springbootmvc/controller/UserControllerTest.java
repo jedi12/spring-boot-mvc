@@ -43,7 +43,7 @@ class UserControllerTest {
         String userJson = mapper.writeValueAsString(userDto);
 
         String createdUserJson = mockMvc.perform(
-                post("/rest/user").contentType(MediaType.APPLICATION_JSON).content(userJson))
+                post("/api/v1/user").contentType(MediaType.APPLICATION_JSON).content(userJson))
                 .andExpect(status().is(201))
                 .andReturn()
                 .getResponse()
@@ -63,7 +63,7 @@ class UserControllerTest {
         user = userService.createUser(user);
         UserDto userDto = UserDto.toUserDto(user);
 
-        String foundUserJson = mockMvc.perform(get("/rest/user/{id}", userDto.getId()))
+        String foundUserJson = mockMvc.perform(get("/api/v1/user/{id}", userDto.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

@@ -1,10 +1,10 @@
 package com.example.springbootmvc.service;
 
+import com.example.springbootmvc.exceptions.EntityNotFound;
+import com.example.springbootmvc.exceptions.UserNotFoundException;
 import com.example.springbootmvc.model.Pet;
 import com.example.springbootmvc.model.User;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -24,7 +24,7 @@ public class UserService {
     public User updateUser(Long userId, User updateUser) {
         User user = findUser(userId);
         if (user == null) {
-            throw new IllegalArgumentException("Обновление пользователя невозможно, так пользователь с id=%s не существует".formatted(userId));
+            throw new UserNotFoundException("Обновление пользователя невозможно, так пользователь с id=%s не существует".formatted(userId));
         }
 
         user.setName(updateUser.getName());
@@ -50,7 +50,7 @@ public class UserService {
     public User getUser(Long userId) {
         User user = findUser(userId);
         if (user == null) {
-            throw new NoSuchElementException("Пользователь с id=%s не найден".formatted(userId));
+            throw new EntityNotFound("Пользователь с id=%s не найден".formatted(userId));
         }
 
         return user;
