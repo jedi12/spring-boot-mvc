@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
         String detail = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        log.warn("REST: Ошибка валидации: {}", detail);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -31,12 +30,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFound.class)
     public ResponseEntity<ErrorMessageResponse> handleNotFoundException(EntityNotFound e) {
-        String detail = e.getMessage();
-        log.warn("REST: Ошибка на сервере: {}", detail);
-
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorMessageResponse("Ошибка на сервере", detail, LocalDateTime.now()));
+                .body(new ErrorMessageResponse("Ошибка на сервере", e.getMessage(), LocalDateTime.now()));
     }
 
     @ExceptionHandler
